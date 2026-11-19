@@ -27,11 +27,50 @@ jobs:
       - name: Создание local.properties с API-ключом
         run: echo "GEMINI_API_KEY=${{ secrets.GEMINI_API_KEY }}" > local.properties
 
-      - name: Очистка и генерация чистых XML-файлов
+      - name: Автогенерация всех чистых XML-ресурсов
         run: |
           rm -f app/src/main/res/drawable/logo_lumi.png app/src/main/res/drawable/ic_launcher_lumi.xml
-          echo "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPG1hbmlmZXN0IHhtbG5zOmFuZHJvaWQ9Imh0dHA6Ly9zY2hlbWFzLmFuZHJvaWQuY29tL2Fway9yZXMvYW5kcm9pZCIKICAgIHhtbG5zOnRvb2xzPSJodHRwOi8vc2NoZW1hcy5hbmRyb2lkLmNvbS90b29scyI+CiAgICA8dXNlcy1wZXJtaXNzaW9uIGFuZHJvaWQ6bmFtZT0iYW5kcm9pZC5wZXJtaXNzaW9uLklOVEVSTkVUIiAvPgogICAgPHVzZXMtcGVybWlzc2lvbiBhbmRyb2lkOm5hbWU9ImFuZHJvaWQucGVybWlzc2lvbi5SRUNPUkRfQVVESU8iIC8+CiAgICA8YXBwbGljYXRpb24KICAgICAgICBhbmRyb2lkOmFsbG93QmFja3VwPSJ0cnVlIgogICAgICAgIGFuZHJvaWQ6bGFiZWw9IkxVTUkgQUkiCiAgICAgICAgYW5kcm9pZDpzdXBwb3J0c1J0bD0idHJ1ZSIKICAgICAgICBhbmRyb2lkOnRoZW1lPSJAc3R5bGUvVGhlbWUuTHVtaUFJIgogICAgICAgIHRvb2xzOnRhcmdldEFwaT0iMzUiPgogICAgICAgIDxhY3Rpdml0eSBhbmRyb2lkOm5hbWU9Ii51aS5TcGxhc2hBY3Rpdml0eSIgYW5kcm9pZDpleHBvcnRlZD0idHJ1ZSI+CiAgICAgICAgICAgIDxpbnRlbnQtZmlsdGVyPgogICAgICAgICAgICAgICAgPGFjdGlvbiBhbmRyb2lkOm5hbWU9ImFuZHJvaWQuaW50ZW50LmFjdGlvbi5NQUlOIiAvPgogICAgICAgICAgICAgICAgPGNhdGVnb3J5IGFuZHJvaWQ6bmFtZT0iYW5kcm9pZC5pbnRlbnQuY2F0ZWdvcnkuTEFVTkNIRVIiIC8+CiAgICAgICAgICAgIDwvaW50ZW50LWZpbHRlcj4KICAgICAgICA8L2FjdGl2aXR5PgogICAgICAgIDxhY3Rpdml0eSBhbmRyb2lkOm5hbWU9Ii51aS5NYWluQWN0aXZpdHkiIGFuZHJvaWQ6ZXhwb3J0ZWQ9ImZhbHNlIiBhbmRyb2lkOndpbmRvd1NvZnRJbnB1dE1vZGU9ImFkanVzdFJlc2l6ZSIgLz4KICAgIDwvYXBwbGljYXRpb24+CjwvbWFuaWZlc3Q+" | base64 -d > app/src/main/AndroidManifest.xml
-          echo "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPExpbmVhckxheW91dCB4bWxuczphbmRyb2lkPSJodHRwOi8vc2NoZW1hcy5hbmRyb2lkLmNvbS9hcGsvcmVzL2FuZHJvaWQiCiAgICBhbmRyb2lkOmlkPSJAK2lkL2ltZ1NwbGFzaExvZ28iCiAgICBhbmRyb2lkOmxheW91dF93aWR0aD0ibWF0Y2hfcGFyZW50IgogICAgYW5kcm9pZDpsYXlvdXRfaGVpZ2h0PSJtYXRjaF9wYXJlbnQiCiAgICBhbmRyb2lkOmFscGhhPSIwIgogICAgYW5kcm9pZDpiYWNrZ3JvdW5kPSJAY29sb3IvbHVtaV9iZ19jaGFyY29hbCIKICAgIGFuZHJvaWQ6Z3Jhdml0eT0iY2VudGVyIgogICAgYW5kcm9pZDpvcmllbnRhdGlvbj0idmVydGljYWwiPgogICAgPExpbmVhckxheW91dAogICAgICAgIGFuZHJvaWQ6bGF5b3V0X3dpZHRoPSJ3cmFwX2NvbnRlbnQiCiAgICAgICAgYW5kcm9pZDpsYXlvdXRfaGVpZ2h0PSJ3cmFwX2NvbnRlbnQiCiAgICAgICAgYW5kcm9pZDpvcmllbnRhdGlvbj0iaG9yaXpvbnRhbCI+CiAgICAgICAgPFRleHRWaWV3CiAgICAgICAgICAgIGFuZHJvaWQ6bGF5b3V0X3dpZHRoPSJ3cmFwX2NvbnRlbnQiCiAgICAgICAgICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IgogICAgICAgICAgICBhbmRyb2lkOmZvbnRGYW1pbHk9InNhbnMtc2VyaWYtYmxhY2siCiAgICAgICAgICAgIGFuZHJvaWQ6bGV0dGVyU3BhY2luZz0iMC4wOCIKICAgICAgICAgICAgYW5kcm9pZDp0ZXh0PSJMVU1JIgogICAgICAgICAgICBhbmRyb2lkOnRleHRDb2xvcj0iQGNvbG9yL2x1bWlfdGV4dF93aGl0ZSIKICAgICAgICAgICAgYW5kcm9pZDp0ZXh0U2l6ZT0iNDhzcCIgLz4KICAgICAgICA8VGV4dFZpZXcKICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfd2lkdGg9IndyYXBfY29udGVudCIKICAgICAgICAgICAgYW5kcm9pZDpsYXlvdXRfaGVpZ2h0PSJ3cmFwX2NvbnRlbnQiCiAgICAgICAgICAgIGFuZHJvaWQ6bGF5b3V0X21hcmdpblN0YXJ0PSI4ZHAiCiAgICAgICAgICAgIGFuZHJvaWQ6Zm9udEZhbWlseT0ic2Fucy1zZXJpZi1ibGFjayIKICAgICAgICAgICAgYW5kcm9pZDp0ZXh0PSJBSSIKICAgICAgICAgICAgYW5kcm9pZDp0ZXh0Q29sb3I9IkBjb2xvci9sdW1pX2NyaW1zb25fcmVkIgogICAgICAgICAgICBhbmRyb2lkOnRleHRTaXplPSI0OHNwIiAvPgogICAgPC9MaW5lYXJMYXlvdXQ+CiAgICA8VGV4dFZpZXcKICAgICAgICBhbmRyb2lkOmxheW91dF93aWR0aD0id3JhcF9jb250ZW50IgogICAgICAgIGFuZHJvaWQ6bGF5b3V0X2hlaWdodD0id3JhcF9jb250ZW50IgogICAgICAgIGFuZHJvaWQ6bGF5b3V0X21hcmdpblRvcD0iNmRwIgogICAgICAgIGFuZHJvaWQ6dGV4dD0iYmFzZWQgYXQgR29vZ2xlIEFJIgogICAgICAgIGFuZHJvaWQ6dGV4dENvbG9yPSJAY29sb3IvbHVtaV90ZXh0X3NlY29uZGFyeSIKICAgICAgICBhbmRyb2lkOnRleHRTaXplPSIxNHNwIiAvPgo8L0xpbmVhckxheW91dD4=" | base64 -d > app/src/main/res/layout/activity_splash.xml
+          python3 -c '
+          import os, base64
+
+          os.makedirs("app/src/main/res/layout", exist_ok=True)
+          os.makedirs("app/src/main/res/drawable", exist_ok=True)
+          os.makedirs("app/src/main/res/values", exist_ok=True)
+
+          def w(path, b64):
+              with open(path, "wb") as f:
+                  f.write(base64.b64decode(b64))
+
+          # AndroidManifest.xml
+          w("app/src/main/AndroidManifest.xml", "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPG1hbmlmZXN0IHhtbG5zOmFuZHJvaWQ9Imh0dHA6Ly9zY2hlbWFzLmFuZHJvaWQuY29tL2Fway9yZXMvYW5kcm9pZCIKICAgIHhtbG5zOnRvb2xzPSJodHRwOi8vc2NoZW1hcy5hbmRyb2lkLmNvbS90b29scyI+CiAgICA8dXNlcy1wZXJtaXNzaW9uIGFuZHJvaWQ6bmFtZT0iYW5kcm9pZC5wZXJtaXNzaW9uLklOVEVSTkVUIiAvPgogICAgPHVzZXMtcGVybWlzc2lvbiBhbmRyb2lkOm5hbWU9ImFuZHJvaWQucGVybWlzc2lvbi5SRUNPUkRfQVVESU8iIC8+CiAgICA8YXBwbGljYXRpb24KICAgICAgICBhbmRyb2lkOmFsbG93QmFja3VwPSJ0cnVlIgogICAgICAgIGFuZHJvaWQ6bGFiZWw9IkxVTUkgQUkiCiAgICAgICAgYW5kcm9pZDpzdXBwb3J0c1J0bD0idHJ1ZSIKICAgICAgICBhbmRyb2lkOnRoZW1lPSJAc3R5bGUvVGhlbWUuTHVtaUFJIgogICAgICAgIHRvb2xzOnRhcmdldEFwaT0iMzUiPgogICAgICAgIDxhY3Rpdml0eSBhbmRyb2lkOm5hbWU9Ii51aS5TcGxhc2hBY3Rpdml0eSIgYW5kcm9pZDpleHBvcnRlZD0idHJ1ZSI+CiAgICAgICAgICAgIDxpbnRlbnQtZmlsdGVyPgogICAgICAgICAgICAgICAgPGFjdGlvbiBhbmRyb2lkOm5hbWU9ImFuZHJvaWQuaW50ZW50LmFjdGlvbi5NQUlOIiAvPgogICAgICAgICAgICAgICAgPGNhdGVnb3J5IGFuZHJvaWQ6bmFtZT0iYW5kcm9pZC5pbnRlbnQuY2F0ZWdvcnkuTEFVTkNIRVIiIC8+CiAgICAgICAgICAgIDwvaW50ZW50LWZpbHRlcj4KICAgICAgICA8L2FjdGl2aXR5PgogICAgICAgIDxhY3Rpdml0eSBhbmRyb2lkOm5hbWU9Ii51aS5NYWluQWN0aXZpdHkiIGFuZHJvaWQ6ZXhwb3J0ZWQ9ImZhbHNlIiBhbmRyb2lkOndpbmRvd1NvZnRJbnB1dE1vZGU9ImFkanVzdFJlc2l6ZSIgLz4KICAgIDwvYXBwbGljYXRpb24+CjwvbWFuaWZlc3Q+")
+
+          # activity_splash.xml (Programmatic clean layout)
+          splash = chr(60) + """?xml version="1.0" encoding="utf-8"?>
+          <LinearLayout xmlns:android="http://android.com"
+              android:id="@+id/imgSplashLogo"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:alpha="0"
+              android:background="#141414"
+              android:gravity="center"
+              android:orientation="vertical">
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:text="LUMI AI"
+                  android:textColor="#FFFFFF"
+                  android:textSize="44sp"
+                  android:textStyle="bold" />
+              <TextView
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_marginTop="8dp"
+                  android:text="based at Google AI"
+                  android:textColor="#E51A1A"
+                  android:textSize="16sp" />
+          </LinearLayout>"""
+          with open("app/src/main/res/layout/activity_splash.xml", "w") as f: f.write(splash)
+          '
 
       - name: Сборка APK
         run: gradle assembleDebug
