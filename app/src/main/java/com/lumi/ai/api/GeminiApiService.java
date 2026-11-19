@@ -17,35 +17,30 @@ import retrofit2.http.Url;
 
 public interface GeminiApiService {
 
-    // 1. Супер-интеллект (быстрая и умная модель с максимальным контекстом)
     @POST("v1beta/models/gemini-2.5-flash:generateContent")
     Call<GeminiResponse> generateSmartContent(
             @Query("key") String apiKey,
             @Body GeminiRequest request
     );
 
-    // 2. Генерация изображений
-    @POST("v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent")
+    @POST("v1beta/models/gemini-2.5-flash-image:generateContent")
     Call<GeminiResponse> generateImage(
             @Query("key") String apiKey,
             @Body GeminiRequest request
     );
 
-    // 3. Запуск генерации видео
     @POST("v1beta/models/veo-2.0-generate-001:predictLongRunning")
     Call<VideoOperationResponse> startVideoGeneration(
             @Query("key") String apiKey,
             @Body JsonObject videoRequestBody
     );
 
-    // 4. Проверка статуса рендеринга видео
     @GET("v1beta/{operationName}")
     Call<VideoOperationResponse> checkVideoOperation(
             @Path(value = "operationName", encoded = true) String operationName,
             @Query("key") String apiKey
     );
 
-    // 5. Скачивание готового MP4-файла
     @Streaming
     @GET
     Call<ResponseBody> downloadVideoFile(
