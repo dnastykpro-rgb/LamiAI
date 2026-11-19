@@ -1,19 +1,27 @@
 package com.lumi.ai.ui;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -27,6 +35,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -76,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
     private long currentChatId = -1;
     private Uri attachedImageUri = null;
     private Runnable thinkingMoreRunnable;
+
     private final ActivityResultLauncher<PickVisualMediaRequest> pickMedia =
             registerForActivityResult(new ActivityResultContracts.PickVisualMedia(), uri -> {
                 if (uri != null) {
@@ -94,42 +104,180 @@ public class MainActivity extends AppCompatActivity {
                     Toast.makeText(this, "Нужен доступ к микрофону для голосового ввода", Toast.LENGTH_SHORT).show();
                 }
             });
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Thread.setDefaultUncaughtExceptionHandler((thread, throwable) -> {
+            String err = Log.getStackTraceString(throwable);
+            mainHandler.post(() -> new AlertDialog.Builder(this)
+                    .setTitle("Ошибка LUMI AI")
+                    .setMessage(err.length() > 600 ? err.substring(0, 600) : err)
+                    .setPositiveButton("Закрыть", (d, w) -> finish())
+                    .show());
+        });
+
         EdgeToEdge.enable(this);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
         db = AppDatabase.getInstance(this);
-        initViews();
+        buildJavaUI();
         setupAnimations();
         setupVoiceInput();
         loadHistoryList();
         startNewChat();
     }
 
-    private void initViews() {
-        drawerLayout = findViewById(R.id.drawerLayout);
-        recyclerMessages = findViewById(R.id.recyclerMessages);
-        recyclerHistory = findViewById(R.id.recyclerHistory);
-        editMessage = findViewById(R.id.editMessage);
-        btnSend = findViewById(R.id.btnSend);
-        btnVoice = findViewById(R.id.btnVoice);
-        btnAttachPhoto = findViewById(R.id.btnAttachPhoto);
-        btnMenu = findViewById(R.id.btnMenu);
-        btnNewChatTop = findViewById(R.id.btnNewChatTop);
-        btnNewChatDrawer = findViewById(R.id.btnNewChatDrawer);
-        chipGroupModes = findViewById(R.id.chipGroupModes);
-        previewContainer = findViewById(R.id.previewContainer);
-        imgAttachmentPreview = findViewById(R.id.imgAttachmentPreview);
-        btnRemoveAttachment = findViewById(R.id.btnRemoveAttachment);
+    private void buildJavaUI() {
+        int bgCharcoal = Color.parseColor("#141414");
+        int surfaceDark = Color.parseColor("#1F1F1F");
+        int surfaceElevated = Color.parseColor("#2A2A2A");
+        int crimsonRed = Color.parseColor("#E51A1A");
 
+        drawerLayout = new DrawerLayout(this);
+        drawerLayout.setBackgroundColor(bgCharcoal);
+
+        LinearLayout mainCol = new LinearLayout(this);
+        mainCol.setOrientation(LinearLayout.VERTICAL);
+        mainCol.setBackgroundColor(bgCharcoal);
+        mainCol.setFitsSystemWindows(true);
+
+        LinearLayout topBar = new LinearLayout(this);
+        topBar.setOrientation(LinearLayout.HORIZONTAL);
+        topBar.setGravity(Gravity.CENTER_VERTICAL);
+        topBar.setPadding(32, 24, 32, 24);
+
+        btnMenu = new ImageButton(this);
+        btnMenu.setImageResource(android.R.drawable.ic_menu_sort_by_size);
+        btnMenu.setColorFilter(Color.WHITE);
+        btnMenu.setBackgroundColor(Color.TRANSPARENT);
+
+        TextView title = new TextView(this);
+        title.setText("  LUMI AI");
+        title.setTextColor(Color.WHITE);
+        title.setTextSize(20f);
+        title.setTypeface(Typeface.DEFAULT_BOLD);
+        title.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
+        btnNewChatTop = new ImageButton(this);
+        btnNewChatTop.setImageResource(android.R.drawable.ic_input_add);
+        btnNewChatTop.setColorFilter(crimsonRed);
+        btnNewChatTop.setBackgroundColor(Color.TRANSPARENT);
+
+        topBar.addView(btnMenu);
+        topBar.addView(title);
+        topBar.addView(btnNewChatTop);
+        mainCol.addView(topBar);
+
+        recyclerMessages = new RecyclerView(this);
+        recyclerMessages.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 0, 1f));
+        recyclerMessages.setPadding(24, 8, 24, 8);
+        mainCol.addView(recyclerMessages);
+        chipGroupModes = new ChipGroup(this);
+        chipGroupModes.setSingleSelection(true);
+        chipGroupModes.setSelectionRequired(true);
+        chipGroupModes.setPadding(28, 8, 28, 8);
+
+        Chip chipChat = new Chip(this);
+        chipChat.setId(R.id.chipModeChat);
+        chipChat.setText("Умный чат");
+        chipChat.setCheckable(true);
+        chipChat.setChecked(true);
+        chipChat.setTextColor(Color.WHITE);
+
+        Chip chipImg = new Chip(this);
+        chipImg.setId(R.id.chipModeImage);
+        chipImg.setText("Создать фото");
+        chipImg.setCheckable(true);
+        chipImg.setTextColor(Color.WHITE);
+
+        Chip chipVid = new Chip(this);
+        chipVid.setId(R.id.chipModeVideo);
+        chipVid.setText("Создать видео");
+        chipVid.setCheckable(true);
+        chipVid.setTextColor(Color.WHITE);
+
+        chipGroupModes.addView(chipChat);
+        chipGroupModes.addView(chipImg);
+        chipGroupModes.addView(chipVid);
+        mainCol.addView(chipGroupModes);
+
+        previewContainer = new FrameLayout(this);
+        previewContainer.setVisibility(View.GONE);
+        previewContainer.setPadding(32, 0, 0, 12);
+        imgAttachmentPreview = new ImageView(this);
+        imgAttachmentPreview.setLayoutParams(new FrameLayout.LayoutParams(180, 180));
+        imgAttachmentPreview.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        btnRemoveAttachment = new ImageButton(this);
+        btnRemoveAttachment.setImageResource(android.R.drawable.ic_menu_close_clear_cancel);
+        btnRemoveAttachment.setBackgroundColor(crimsonRed);
+        btnRemoveAttachment.setColorFilter(Color.WHITE);
+        previewContainer.addView(imgAttachmentPreview);
+        previewContainer.addView(btnRemoveAttachment);
+        mainCol.addView(previewContainer);
+
+        LinearLayout inputBar = new LinearLayout(this);
+        inputBar.setOrientation(LinearLayout.HORIZONTAL);
+        inputBar.setGravity(Gravity.CENTER_VERTICAL);
+        inputBar.setBackgroundColor(surfaceElevated);
+        inputBar.setPadding(16, 12, 16, 12);
+
+        btnAttachPhoto = new ImageButton(this);
+        btnAttachPhoto.setImageResource(android.R.drawable.ic_menu_camera);
+        btnAttachPhoto.setColorFilter(Color.LTGRAY);
+        btnAttachPhoto.setBackgroundColor(Color.TRANSPARENT);
+
+        editMessage = new EditText(this);
+        editMessage.setHint("Спроси Lumi или опиши задачу…");
+        editMessage.setTextColor(Color.WHITE);
+        editMessage.setHintTextColor(Color.GRAY);
+        editMessage.setBackgroundColor(Color.TRANSPARENT);
+        editMessage.setMaxLines(4);
+        editMessage.setLayoutParams(new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+
+        btnVoice = new ImageButton(this);
+        btnVoice.setImageResource(android.R.drawable.ic_btn_speak_now);
+        btnVoice.setColorFilter(crimsonRed);
+        btnVoice.setBackgroundColor(Color.TRANSPARENT);
+
+        btnSend = new ImageButton(this);
+        btnSend.setImageResource(android.R.drawable.ic_menu_send);
+        btnSend.setColorFilter(Color.WHITE);
+        btnSend.setBackgroundColor(crimsonRed);
+        btnSend.setVisibility(View.GONE);
+
+        inputBar.addView(btnAttachPhoto);
+        inputBar.addView(editMessage);
+        inputBar.addView(btnVoice);
+        inputBar.addView(btnSend);
+        mainCol.addView(inputBar);
+
+        drawerLayout.addView(mainCol);
+
+        LinearLayout drawerCol = new LinearLayout(this);
+        drawerCol.setOrientation(LinearLayout.VERTICAL);
+        drawerCol.setBackgroundColor(surfaceDark);
+        drawerCol.setPadding(32, 48, 32, 32);
+        DrawerLayout.LayoutParams drawerLp = new DrawerLayout.LayoutParams(720, ViewGroup.LayoutParams.MATCH_PARENT);
+        drawerLp.gravity = GravityCompat.START;
+        drawerCol.setLayoutParams(drawerLp);
+
+        btnNewChatDrawer = new Button(this);
+        btnNewChatDrawer.setText("+ Новый чат");
+        btnNewChatDrawer.setBackgroundColor(crimsonRed);
+        btnNewChatDrawer.setTextColor(Color.WHITE);
+        drawerCol.addView(btnNewChatDrawer);
+
+        recyclerHistory = new RecyclerView(this);
+        recyclerHistory.setPadding(0, 24, 0, 0);
+        drawerCol.addView(recyclerHistory);
+
+        drawerLayout.addView(drawerCol);
+        setContentView(drawerLayout);
         chatAdapter = new ChatAdapter(this);
         LinearLayoutManager chatLm = new LinearLayoutManager(this);
         chatLm.setStackFromEnd(true);
         recyclerMessages.setLayoutManager(chatLm);
         recyclerMessages.setAdapter(chatAdapter);
+
         historyAdapter = new HistoryAdapter(new HistoryAdapter.OnChatActionListener() {
             @Override
             public void onChatSelected(ChatEntity chat) {
@@ -197,6 +345,7 @@ public class MainActivity extends AppCompatActivity {
         AnimationHelper.setupSpringButton(btnNewChatTop);
         AnimationHelper.setupSpringButton(btnNewChatDrawer);
     }
+
     private void updateSendButtonVisibility() {
         boolean hasText = editMessage.getText().toString().trim().length() > 0;
         boolean hasImage = attachedImageUri != null;
@@ -227,7 +376,7 @@ public class MainActivity extends AppCompatActivity {
             public void onResult(String recognizedText) {
                 btnVoice.setScaleX(1f);
                 btnVoice.setScaleY(1f);
-                editMessage.setHint(R.string.hint_message);
+                editMessage.setHint("Спроси Lumi или опиши задачу…");
                 editMessage.setText(recognizedText);
                 editMessage.setSelection(recognizedText.length());
             }
@@ -236,14 +385,15 @@ public class MainActivity extends AppCompatActivity {
             public void onError(String errorMessage) {
                 btnVoice.setScaleX(1f);
                 btnVoice.setScaleY(1f);
-                editMessage.setHint(R.string.hint_message);
+                editMessage.setHint("Спроси Lumi или опиши задачу…");
                 Toast.makeText(MainActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
     }
-
     private void startVoiceRecognition() {
-        voiceHelper.startListening();
+        if (voiceHelper != null) {
+            voiceHelper.startListening();
+        }
     }
 
     private void startNewChat() {
@@ -272,6 +422,7 @@ public class MainActivity extends AppCompatActivity {
             });
         });
     }
+
     private void handleSendMessage() {
         String text = editMessage.getText().toString().trim();
         Uri imageToSend = attachedImageUri;
@@ -312,7 +463,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void showThinkingIndicator(int modeId) {
-        String initialStatus = getString(R.string.status_thinking);
+        String initialStatus = "Думает…";
         if (modeId == R.id.chipModeImage) initialStatus = "Рисует…";
         if (modeId == R.id.chipModeVideo) initialStatus = "Создает видео…";
 
@@ -320,7 +471,7 @@ public class MainActivity extends AppCompatActivity {
         scrollToBottom();
 
         thinkingMoreRunnable = () -> {
-            String secondStatus = getString(R.string.status_thinking_more);
+            String secondStatus = "Думает еще…";
             if (modeId == R.id.chipModeImage) secondStatus = "Добавляет детали…";
             if (modeId == R.id.chipModeVideo) secondStatus = "Рендерит кадры…";
             chatAdapter.updateThinkingStatus(secondStatus);
@@ -499,4 +650,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-
