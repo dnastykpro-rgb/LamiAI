@@ -7,9 +7,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo_lumi"
         android:label="LUMI AI"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo_lumi"
         android:supportsRtl="true"
         android:theme="@style/Theme.LumiAI"
         tools:targetApi="36">
