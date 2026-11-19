@@ -1,9 +1,13 @@
 package com.lumi.ai.ui.adapter;
 
-import android.view.LayoutInflater;
+import android.content.Context;
+import android.graphics.Color;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -38,8 +42,39 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
     @NonNull
     @Override
     public HistoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_history, parent, false);
-        return new HistoryViewHolder(v);
+        Context ctx = parent.getContext();
+
+        LinearLayout row = new LinearLayout(ctx);
+        row.setLayoutParams(new RecyclerView.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        ));
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        row.setPadding(8, 24, 8, 24);
+
+        TextView title = new TextView(ctx);
+        title.setId(R.id.txtHistoryTitle);
+        title.setTextColor(Color.WHITE);
+        title.setTextSize(15f);
+        title.setMaxLines(1);
+        title.setEllipsize(TextUtils.TruncateAt.END);
+        title.setLayoutParams(new LinearLayout.LayoutParams(
+                0,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                1f
+        ));
+
+        ImageButton del = new ImageButton(ctx);
+        del.setId(R.id.btnDeleteChat);
+        del.setImageResource(android.R.drawable.ic_menu_delete);
+        del.setColorFilter(Color.GRAY);
+        del.setBackgroundColor(Color.TRANSPARENT);
+
+        row.addView(title);
+        row.addView(del);
+
+        return new HistoryViewHolder(row);
     }
 
     @Override
@@ -66,4 +101,3 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.HistoryV
         }
     }
 }
-
