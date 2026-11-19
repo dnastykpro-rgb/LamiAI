@@ -1,1 +1,12 @@
+<resources>
+    <string name="app_name">LUMI AI</string>
+    <string name="based_on">based at Google AI</string>
+    <string name="hint_message">Спроси Lumi или опиши задачу…</string>
+    <string name="status_thinking">Думает…</string>
+    <string name="status_thinking_more">Думает еще…</string>
+    <string name="new_chat">+ Новый чат</string>
+    <string name="mode_chat">Умный чат</string>
+    <string name="mode_image">Создать фото</string>
+    <string name="mode_video">Создать видео</string>
+</resources>
 
