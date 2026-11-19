@@ -1,1 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://android.com"
+    xmlns:app="http://android.com"
+    android:id="@+id/drawerLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/lumi_bg_charcoal">
+
+    <!-- Основной экран чата -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/mainContent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <!-- Верхняя панель -->
+        <LinearLayout
+            android:id="@+id/topBar"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageButton
+                android:id="@+id/btnMenu"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_sort_by_size"
+                app:tint="@color/lumi_text_white" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="LUMI AI"
+                android:textColor="@color/lumi_text_white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btnNewChatTop"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_input_add"
+                app:tint="@color/lumi_crimson_red" />
+        </LinearLayout>
+
+        <!-- Лента сообщений -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerMessages"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:clipToPadding="false"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="8dp"
+            app:layout_constraintBottom_toTopOf="@id/chipGroupModes"
+            app:layout_constraintTop_toBottomOf="@id/topBar" />
+
+        <!-- Переключатель режимов: Умный чат / Фото / Видео -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupModes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="14dp"
+            android:paddingBottom="4dp"
+            app:selectionRequired="true"
+            app:singleSelection="true"
+            app:layout_constraintBottom_toTopOf="@id/previewContainer">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipModeChat"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="@string/mode_chat"
+                android:textColor="@color/lumi_text_white"
+                app:chipBackgroundColor="@color/lumi_surface_elevated"
+                app:checkedIconTint="@color/lumi_crimson_red" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipModeImage"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mode_image"
+                android:textColor="@color/lumi_text_white"
+                app:chipBackgroundColor="@color/lumi_surface_elevated"
+                app:checkedIconTint="@color/lumi_crimson_red" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipModeVideo"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/mode_video"
+                android:textColor="@color/lumi_text_white"
+                app:chipBackgroundColor="@color/lumi_surface_elevated"
+                app:checkedIconTint="@color/lumi_crimson_red" />
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- Превью прикрепленного фото задания -->
+        <FrameLayout
+            android:id="@+id/previewContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="6dp"
+            android:visibility="gone"
+            app:layout_constraintBottom_toTopOf="@id/inputBar"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:id="@+id/imgAttachmentPreview"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:background="@drawable/bg_message_lumi"
+                android:padding="2dp"
+                android:scaleType="centerCrop" />
+
+            <ImageButton
+                android:id="@+id/btnRemoveAttachment"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:layout_gravity="top|end"
+                android:background="@color/lumi_crimson_red"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                app:tint="@color/lumi_text_white" />
+        </FrameLayout>
+
+        <!-- Нижняя панель ввода -->
+        <LinearLayout
+            android:id="@+id/inputBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/bg_input_panel"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="4dp"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageButton
+                android:id="@+id/btnAttachPhoto"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_menu_camera"
+                app:tint="@color/lumi_text_secondary" />
+
+            <EditText
+                android:id="@+id/editMessage"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@android:color/transparent"
+                android:hint="@string/hint_message"
+                android:inputType="textCapSentences|textMultiLine"
+                android:maxLines="5"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="10dp"
+                android:textColor="@color/lumi_text_white"
+                android:textColorHint="@color/lumi_text_secondary"
+                android:textSize="15sp" />
+
+            <ImageButton
+                android:id="@+id/btnVoice"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@android:drawable/ic_btn_speak_now"
+                app:tint="@color/lumi_crimson_red" />
+
+            <ImageButton
+                android:id="@+id/btnSend"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_message_user"
+                android:src="@android:drawable/ic_menu_send"
+                android:visibility="gone"
+                app:tint="@color/lumi_text_white" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Боковая панель истории диалогов -->
+    <LinearLayout
+        android:layout_width="290dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="@color/lumi_surface_dark"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/btnNewChatDrawer"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:backgroundTint="@color/lumi_crimson_red"
+            android:text="@string/new_chat"
+            android:textColor="@color/lumi_text_white"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="8dp"
+            android:text="История диалогов"
+            android:textColor="@color/lumi_text_secondary"
+            android:textSize="13sp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerHistory"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</androidx.drawerlayout.widget.DrawerLayout>
 
