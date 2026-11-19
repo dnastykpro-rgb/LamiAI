@@ -1,1 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://android.com"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="start"
+    android:paddingVertical="6dp">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_message_lumi"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="14dp"
+        android:paddingVertical="10dp">
+
+        <View
+            android:id="@+id/viewThinkingDot"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/bg_message_user" />
+
+        <TextView
+            android:id="@+id/txtThinkingStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:text="@string/status_thinking"
+            android:textColor="@color/lumi_text_secondary"
+            android:textSize="14sp"
+            android:textStyle="italic" />
+    </LinearLayout>
+</LinearLayout>
 
