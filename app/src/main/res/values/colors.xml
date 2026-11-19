@@ -1,1 +1,11 @@
-
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="lumi_bg_charcoal">#141414</color>
+    <color name="lumi_surface_dark">#1F1F1F</color>
+    <color name="lumi_surface_elevated">#2A2A2A</color>
+    <color name="lumi_crimson_red">#E51A1A</color>
+    <color name="lumi_crimson_dark">#B31212</color>
+    <color name="lumi_text_white">#FFFFFF</color>
+    <color name="lumi_text_secondary">#A0A0A0</color>
+    <color name="lumi_divider">#2E2E2E</color>
+</resources>
