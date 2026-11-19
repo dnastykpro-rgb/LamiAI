@@ -164,9 +164,9 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         }
 
-        if (holder.getBindingAdapterPosition() > lastAnimatedPosition) {
+        if (holder.getAdapterPosition() > lastAnimatedPosition) {
             AnimationHelper.animateMessageAppear(holder.itemView, msg.isUser);
-            lastAnimatedPosition = holder.getBindingAdapterPosition();
+            lastAnimatedPosition = holder.getAdapterPosition();
         }
     }
 
