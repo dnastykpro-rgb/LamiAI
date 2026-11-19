@@ -3,11 +3,14 @@ package com.lumi.ai.ui.adapter;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
-import android.view.LayoutInflater;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -82,16 +85,125 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        Context ctx = parent.getContext();
+        int crimson = Color.parseColor("#E51A1A");
+        int surface = Color.parseColor("#1F1F1F");
+
         if (viewType == TYPE_USER) {
-            return new UserViewHolder(inflater.inflate(R.layout.item_message_user, parent, false));
+            LinearLayout row = new LinearLayout(ctx);
+            row.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            row.setGravity(Gravity.END);
+            row.setPadding(80, 12, 8, 12);
+
+            LinearLayout bubble = new LinearLayout(ctx);
+            bubble.setOrientation(LinearLayout.VERTICAL);
+            bubble.setBackgroundColor(crimson);
+            bubble.setPadding(28, 20, 28, 20);
+
+            ImageView img = new ImageView(ctx);
+            img.setId(R.id.imgUserAttached);
+            img.setLayoutParams(new LinearLayout.LayoutParams(450, 450));
+            img.setScaleType(ImageView.ScaleType.CENTER_CROP);
+            img.setVisibility(View.GONE);
+
+            TextView txt = new TextView(ctx);
+            txt.setId(R.id.txtUserMessage);
+            txt.setTextColor(Color.WHITE);
+            txt.setTextSize(15f);
+
+            bubble.addView(img);
+            bubble.addView(txt);
+            row.addView(bubble);
+            return new UserViewHolder(row);
         } else if (viewType == TYPE_THINKING) {
-            return new ThinkingViewHolder(inflater.inflate(R.layout.item_thinking_status, parent, false));
+            LinearLayout row = new LinearLayout(ctx);
+            row.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            row.setPadding(8, 12, 80, 12);
+
+            LinearLayout bubble = new LinearLayout(ctx);
+            bubble.setOrientation(LinearLayout.HORIZONTAL);
+            bubble.setGravity(Gravity.CENTER_VERTICAL);
+            bubble.setBackgroundColor(surface);
+            bubble.setPadding(28, 20, 28, 20);
+
+            View dot = new View(ctx);
+            dot.setId(R.id.viewThinkingDot);
+            dot.setLayoutParams(new LinearLayout.LayoutParams(24, 24));
+            dot.setBackgroundColor(crimson);
+
+            TextView status = new TextView(ctx);
+            status.setId(R.id.txtThinkingStatus);
+            status.setTextColor(Color.LTGRAY);
+            status.setTextSize(14f);
+            status.setPadding(20, 0, 0, 0);
+
+            bubble.addView(dot);
+            bubble.addView(status);
+            row.addView(bubble);
+            return new ThinkingViewHolder(row);
         } else {
-            return new LumiViewHolder(inflater.inflate(R.layout.item_message_lumi, parent, false));
+            LinearLayout row = new LinearLayout(ctx);
+            row.setLayoutParams(new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            row.setPadding(8, 12, 48, 12);
+
+            LinearLayout bubble = new LinearLayout(ctx);
+            bubble.setOrientation(LinearLayout.VERTICAL);
+            bubble.setBackgroundColor(surface);
+            bubble.setPadding(32, 24, 32, 24);
+
+            TextView header = new TextView(ctx);
+            header.setText("LUMI AI");
+            header.setTextColor(crimson);
+            header.setTextSize(11f);
+            header.setTypeface(Typeface.DEFAULT_BOLD);
+
+            TextView txt = new TextView(ctx);
+            txt.setId(R.id.txtLumiMessage);
+            txt.setTextColor(Color.WHITE);
+            txt.setTextSize(15f);
+            txt.setTextIsSelectable(true);
+            txt.setPadding(0, 8, 0, 8);
+
+            ImageView img = new ImageView(ctx);
+            img.setId(R.id.imgLumiGenerated);
+            img.setLayoutParams(new LinearLayout.LayoutParams(550, 550));
+            img.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            img.setVisibility(View.GONE);
+
+            VideoView vid = new VideoView(ctx);
+            vid.setId(R.id.videoLumiGenerated);
+            vid.setLayoutParams(new LinearLayout.LayoutParams(550, 550));
+            vid.setVisibility(View.GONE);
+
+            LinearLayout actions = new LinearLayout(ctx);
+            actions.setOrientation(LinearLayout.HORIZONTAL);
+            actions.setPadding(0, 12, 0, 0);
+
+            TextView btnCopy = new TextView(ctx);
+            btnCopy.setId(R.id.btnCopyText);
+            btnCopy.setText("Копировать   ");
+            btnCopy.setTextColor(Color.GRAY);
+            btnCopy.setTextSize(12f);
+
+            TextView btnSave = new TextView(ctx);
+            btnSave.setId(R.id.btnSaveMedia);
+            btnSave.setText("Сохранить в галерею");
+            btnSave.setTextColor(crimson);
+            btnSave.setTextSize(12f);
+            btnSave.setVisibility(View.GONE);
+
+            actions.addView(btnCopy);
+            actions.addView(btnSave);
+
+            bubble.addView(header);
+            bubble.addView(txt);
+            bubble.addView(img);
+            bubble.addView(vid);
+            bubble.addView(actions);
+            row.addView(bubble);
+            return new LumiViewHolder(row);
         }
     }
-
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         MessageEntity msg = messages.get(position);
@@ -212,4 +324,3 @@ public class ChatAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 }
-
