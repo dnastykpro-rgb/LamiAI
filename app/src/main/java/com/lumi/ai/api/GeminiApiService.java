@@ -17,21 +17,21 @@ import retrofit2.http.Url;
 
 public interface GeminiApiService {
 
-    // 1. Супер-интеллект (решение уроков, анализ фото, сложные задачи без обрывов)
-    @POST("v1beta/models/gemini-2.5-pro:generateContent")
+    // 1. Супер-интеллект (быстрая и умная модель с максимальным контекстом)
+    @POST("v1beta/models/gemini-2.5-flash:generateContent")
     Call<GeminiResponse> generateSmartContent(
             @Query("key") String apiKey,
             @Body GeminiRequest request
     );
 
-    // 2. Генерация изображений (PNG)
-    @POST("v1beta/models/gemini-2.5-flash-image:generateContent")
+    // 2. Генерация изображений
+    @POST("v1beta/models/gemini-2.0-flash-exp-image-generation:generateContent")
     Call<GeminiResponse> generateImage(
             @Query("key") String apiKey,
             @Body GeminiRequest request
     );
 
-    // 3. Запуск генерации видео (Veo)
+    // 3. Запуск генерации видео
     @POST("v1beta/models/veo-2.0-generate-001:predictLongRunning")
     Call<VideoOperationResponse> startVideoGeneration(
             @Query("key") String apiKey,
@@ -53,4 +53,3 @@ public interface GeminiApiService {
             @Query("key") String apiKey
     );
 }
-
