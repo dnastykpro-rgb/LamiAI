@@ -1,1 +1,11 @@
-
+<resources xmlns:tools="http://android.com">
+    <style name="Theme.LumiAI" parent="Theme.Material3.Dark.NoActionBar">
+        <item name="colorPrimary">@color/lumi_crimson_red</item>
+        <item name="colorOnPrimary">@color/lumi_text_white</item>
+        <item name="android:windowBackground">@color/lumi_bg_charcoal</item>
+        <item name="colorSurface">@color/lumi_surface_dark</item>
+        <item name="colorOnSurface">@color/lumi_text_white</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>
